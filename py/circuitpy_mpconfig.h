@@ -37,7 +37,6 @@ extern void common_hal_mcu_enable_interrupts(void);
 // MicroPython-only options not used by CircuitPython, but present in various files
 // inherited from MicroPython, especially in extmod/
 #define MICROPY_ENABLE_DYNRUNTIME        (0)
-#define MICROPY_HW_ENABLE_USB            (0)
 #define MICROPY_HW_ENABLE_USB_RUNTIME_DEVICE (0)
 #define MICROPY_PY_BLUETOOTH             (0)
 #define MICROPY_PY_LWIP_SLIP             (0)
@@ -345,9 +344,6 @@ typedef long mp_off_t;
 #endif
 
 
-// For easy debugging printf's.
-#define PLAT_PRINTF(...) mp_printf(&mp_plat_print, __VA_ARGS__)
-
 #if MICROPY_PY_ASYNC_AWAIT && !CIRCUITPY_TRACEBACK
 #error CIRCUITPY_ASYNCIO requires CIRCUITPY_TRACEBACK
 #endif
@@ -433,17 +429,98 @@ extern const struct _mp_obj_module_t nvm_module;
 
 #define MICROPY_PORT_BUILTIN_MODULES_STRONG_LINKS
 
+// Define the list of built-in modules
+#define MICROPY_PORT_BUILTIN_MODULE_LIST \
+    { MP_OBJ_NEW_QSTR(MP_QSTR_builtins), (mp_obj_t)&mp_module_builtins }, \
+    AESIO_MODULE \
+    ALARM_MODULE \
+    ANALOGBUFIO_MODULE \
+    ANALOGIO_MODULE \
+    ATEXIT_MODULE \
+    AUDIOBUSIO_MODULE \
+    AUDIOCORE_MODULE \
+    AUDIOIO_MODULE \
+    AUDIOPWMIO_MODULE \
+    AUDIOMIXER_MODULE \
+    AUDIOMP3_MODULE \
+    BITBANG_APA102_MODULE \
+    BITBANGIO_MODULE \
+    BLEIO_MODULE \
+    BOARD_MODULE \
+    BUSDEVICE_MODULE \
+    BUSIO_MODULE \
+    CAMERA_MODULE \
+    CANIO_MODULE \
+    COUNTIO_MODULE \
+    DIGITALIO_MODULE \
+    DISPLAYIO_MODULE \
+    ERRNO_MODULE \
+    ESPIDF_MODULE \
+    ESPNOW_MODULE \
+    ESPULP_MODULE \
+    ESPCAMERA_MODULE \
+    EVE_MODULE \
+    FONTIO_MODULE \
+    FRAMEBUFFERIO_MODULE \
+    FREQUENCYIO_MODULE \
+    GAMEPAD_MODULE \
+    GAMEPADSHIFT_MODULE \
+    GNSS_MODULE \
+    I2CTARGET_MODULE \
+    IMAGECAPTURE_MODULE \
+    IPADDRESS_MODULE \
+    KEYPAD_MODULE \
+    MATH_MODULE \
+    MEMORYMONITOR_MODULE \
+    MICROCONTROLLER_MODULE \
+    MSGPACK_MODULE \
+    NEOPIXEL_WRITE_MODULE \
+    NVM_MODULE \
+    OS_MODULE \
+    PEW_MODULE \
+    PIXELBUF_MODULE \
+    PIXELCORE_MODULE \
+    SAMPLECORE_MODULE \
+    SQUARECORE_MODULE \
+    PS2IO_MODULE \
+    PULSEIO_MODULE \
+    PWMIO_MODULE \
+    RANDOM_MODULE \
+    RE_MODULE \
+    ROTARYIO_MODULE \
+    RTC_MODULE \
+    SDCARDIO_MODULE \
+    SDIOIO_MODULE \
+    SHARPDISPLAY_MODULE \
+    SOCKETPOOL_MODULE \
+    SSL_MODULE \
+    SUPERVISOR_MODULE \
+    SYNTHIO_MODULE \
+    TERMINALIO_MODULE \
+    TIME_MODULE \
+    TOUCHIO_MODULE \
+    TRACEBACK_MODULE \
+    UHEAP_MODULE \
+    USB_CDC_MODULE \
+    USB_HID_MODULE \
+    USB_MIDI_MODULE \
+    VECTORIO_MODULE \
+    WATCHDOG_MODULE \
+    WIFI_MODULE \
+    ZLIB_MODULE
+
 // If weak links are enabled, just include strong links in the main list of modules,
 // and also include the underscore alternate names.
 #if MICROPY_MODULE_WEAK_LINKS
+#undef MICROPY_PORT_BUILTIN_MODULES
 #define MICROPY_PORT_BUILTIN_MODULES \
     MICROPY_PORT_BUILTIN_MODULES_STRONG_LINKS \
     MICROPY_PORT_BUILTIN_MODULE_ALT_NAMES
 #else
-// If weak links are disabled, included both strong and potentially weak lines
+// If weak links are disabled, include both strong and potentially weak lines
+#undef MICROPY_PORT_BUILTIN_MODULES
 #define MICROPY_PORT_BUILTIN_MODULES \
-    MICROPY_PORT_BUILTIN_MODULES_STRONG_LINKS \
-    MICROPY_PORT_BUILTIN_MODULE_WEAK_LINKS
+    MICROPY_PORT_BUILTIN_MODULE_LIST
 #endif
 
 // We need to provide a declaration/definition of alloca()
@@ -456,7 +533,6 @@ void background_callback_run_all(void);
 
 #define MICROPY_VM_HOOK_LOOP RUN_BACKGROUND_TASKS;
 #define MICROPY_VM_HOOK_RETURN RUN_BACKGROUND_TASKS;
-#define MICROPY_INTERNAL_EVENT_HOOK (RUN_BACKGROUND_TASKS)
 
 // CIRCUITPY_AUTORELOAD_DELAY_MS = 0 will completely disable autoreload.
 #ifndef CIRCUITPY_AUTORELOAD_DELAY_MS
@@ -516,18 +592,6 @@ void background_callback_run_all(void);
 #endif
 
 // USB settings
-
-#ifndef CIRCUITPY_SDCARD_USB
-#if CIRCUITPY_USB_DEVICE
-#define CIRCUITPY_SDCARD_USB (CIRCUITPY_SDCARDIO && CIRCUITPY_USB_MSC)
-#else
-#define CIRCUITPY_SDCARD_USB (0)
-#endif
-#endif
-
-#if CIRCUITPY_SDCARD_USB && !(CIRCUITPY_SDCARDIO)
-#error CIRCUITPY_SDCARD_USB requires CIRCUITPY_SDCARDIO
-#endif
 
 // Debug level for TinyUSB. Only outputs over debug UART so it doesn't cause
 // additional USB logging.
@@ -656,7 +720,7 @@ void background_callback_run_all(void);
 #define MICROPY_PY_BUILTINS_COMPILE (1)
 
 #ifndef CIRCUITPY_MIN_GCC_VERSION
-#define CIRCUITPY_MIN_GCC_VERSION 14
+#define CIRCUITPY_MIN_GCC_VERSION 13
 #endif
 
 #ifndef CIRCUITPY_SAVES_PARTITION_SIZE
@@ -682,4 +746,32 @@ void background_callback_run_all(void);
     -- older versions are known to miscompile CircuitPython)
 DO_ERROR(CIRCUITPY_MIN_GCC_VERSION);
 #endif
+#endif
+
+#if CIRCUITPY_PIXELCORE
+extern const struct _mp_obj_module_t pixelcore_module;
+#define PIXELCORE_MODULE { MP_OBJ_NEW_QSTR(MP_QSTR_pixelcore), (mp_obj_t)&pixelcore_module },
+#else
+#define PIXELCORE_MODULE
+#endif
+
+#if CIRCUITPY_SAMPLECORE
+extern const struct _mp_obj_module_t samplecore_module;
+#define SAMPLECORE_MODULE { MP_OBJ_NEW_QSTR(MP_QSTR_samplecore), (mp_obj_t)&samplecore_module },
+#else
+#define SAMPLECORE_MODULE
+#endif
+
+#if CIRCUITPY_SQUARECORE
+extern const struct _mp_obj_module_t squarecore_module;
+#define SQUARECORE_MODULE { MP_OBJ_NEW_QSTR(MP_QSTR_squarecore), (mp_obj_t)&squarecore_module },
+#else
+#define SQUARECORE_MODULE
+#endif
+
+#if CIRCUITPY_RE
+extern const struct _mp_obj_module_t mp_module_re;
+#define RE_MODULE { MP_OBJ_NEW_QSTR(MP_QSTR_re), (mp_obj_t)&mp_module_re },
+#else
+#define RE_MODULE
 #endif
