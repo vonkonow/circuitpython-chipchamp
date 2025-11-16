@@ -32,9 +32,9 @@
 #define CIRCUITPY_SQUARECORE (0)
 #endif
 
-// USB support
+// USB support - ESP32 uses CIRCUITPY_USB_DEVICE instead
 #ifndef MICROPY_HW_ENABLE_USB
-#define MICROPY_HW_ENABLE_USB (1)
+#define MICROPY_HW_ENABLE_USB (0)
 #endif
 
 // SD card USB support
