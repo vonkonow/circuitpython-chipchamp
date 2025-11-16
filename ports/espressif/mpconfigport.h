@@ -32,6 +32,16 @@
 #define CIRCUITPY_SQUARECORE (0)
 #endif
 
+// USB support
+#ifndef MICROPY_HW_ENABLE_USB
+#define MICROPY_HW_ENABLE_USB (1)
+#endif
+
+// SD card USB support
+#ifndef CIRCUITPY_SDCARD_USB
+#define CIRCUITPY_SDCARD_USB (0)
+#endif
+
 #include "py/circuitpy_mpconfig.h"
 
 #define MICROPY_NLR_SETJMP                  (1)
