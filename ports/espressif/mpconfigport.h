@@ -27,6 +27,11 @@
 #define CIRCUITPY_SAMPLECORE (1)
 #endif
 
+// Enable squarecore module if configured
+#ifndef CIRCUITPY_SQUARECORE
+#define CIRCUITPY_SQUARECORE (0)
+#endif
+
 #include "py/circuitpy_mpconfig.h"
 
 #define MICROPY_NLR_SETJMP                  (1)
