@@ -17,6 +17,16 @@
 
 #define CIRCUITPY_DIGITALIO_HAVE_INPUT_ONLY (1)
 
+// Enable pixelcore module if configured
+#ifndef CIRCUITPY_PIXELCORE
+#define CIRCUITPY_PIXELCORE (1)
+#endif
+
+// Enable samplecore module if configured
+#ifndef CIRCUITPY_SAMPLECORE
+#define CIRCUITPY_SAMPLECORE (1)
+#endif
+
 #include "py/circuitpy_mpconfig.h"
 
 #define MICROPY_NLR_SETJMP                  (1)
