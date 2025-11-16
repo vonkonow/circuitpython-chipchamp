@@ -463,6 +463,18 @@ ifneq ($(CIRCUITPY_BLEIO_NATIVE),0)
 SRC_C += common-hal/_bleio/ble_events.c
 endif
 
+ifeq ($(CIRCUITPY_PIXELCORE),1)
+SRC_C += \
+	common-hal/pixelcore/pixelcore.c \
+	common-hal/pixelcore/__init__.c
+endif
+
+ifeq ($(CIRCUITPY_SAMPLECORE),1)
+SRC_C += \
+	common-hal/samplecore/SampleCore.c \
+	common-hal/samplecore/__init__.c
+endif
+
 ifneq ($(CIRCUITPY_DOTCLOCKFRAMEBUFFER),0)
 CFLAGS += \
 	-isystem esp-idf/components/esp_lcd/include \
