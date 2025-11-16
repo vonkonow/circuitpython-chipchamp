@@ -466,6 +466,16 @@ ifeq ($(CIRCUITPY_ZLIB),1)
 SRC_PATTERNS += zlib/%
 endif
 
+# Add pixelcore to source patterns if enabled
+ifeq ($(CIRCUITPY_PIXELCORE),1)
+SRC_PATTERNS += pixelcore/%
+endif
+
+# Add samplecore to source patterns if enabled
+ifeq ($(CIRCUITPY_SAMPLECORE),1)
+SRC_PATTERNS += samplecore/%
+endif
+
 # All possible sources are listed here, and are filtered by SRC_PATTERNS in SRC_COMMON_HAL
 SRC_COMMON_HAL_ALL = \
 	_bleio/Adapter.c \
@@ -542,6 +552,10 @@ SRC_COMMON_HAL_ALL = \
 	nvm/__init__.c \
 	os/__init__.c \
 	paralleldisplaybus/ParallelBus.c \
+	pixelcore/pixelcore.c \
+	pixelcore/__init__.c \
+	samplecore/SampleCore.c \
+	samplecore/__init__.c \
 	ps2io/Ps2.c \
 	ps2io/__init__.c \
 	pulseio/PulseIn.c \
@@ -625,6 +639,10 @@ $(filter $(SRC_PATTERNS), \
 	msgpack/__init__.c \
 	msgpack/ExtType.c \
 	paralleldisplaybus/__init__.c \
+	pixelcore/pixelcore.c \
+	pixelcore/__init__.c \
+	samplecore/SampleCore.c \
+	samplecore/__init__.c \
 	qrio/PixelPolicy.c \
 	qrio/QRInfo.c \
 	supervisor/RunReason.c \
