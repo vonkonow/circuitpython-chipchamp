@@ -35,9 +35,10 @@ development boards. Please support both MicroPython and Adafruit.
 About This Fork
 ---------------
 
-This fork of CircuitPython includes custom modules optimized for **game development** on ESP32-S2
-microcontrollers, specifically targeting the **Lolin S2 Mini** board. It adds two high-performance
-modules that provide hardware-accelerated graphics and audio capabilities:
+This fork of CircuitPython is custom-built for the **ChipChamp Gaming Console**. It includes custom
+modules optimized for game development on ESP32-S2 microcontrollers, specifically targeting the
+**Lolin S2 Mini** board. It adds two high-performance modules that provide hardware-accelerated
+graphics and audio capabilities:
 
 **PixelCore Module** - High-Performance Display Driver
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -106,9 +107,9 @@ Ideal for game sound effects, music playback, and audio synthesis. See the
 
    audio.play(channel=0, data=kick_sample, midi_note=60, volume=256)
 
-This fork maintains full compatibility with standard CircuitPython while adding these specialized
-modules for game development. All standard CircuitPython features and libraries continue to work
-as expected.
+This fork is specifically designed for the **ChipChamp Gaming Console** and maintains full
+compatibility with standard CircuitPython while adding these specialized modules for game
+development. All standard CircuitPython features and libraries continue to work as expected.
 
 Get CircuitPython
 ------------------
