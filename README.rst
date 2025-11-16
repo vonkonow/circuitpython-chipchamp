@@ -32,6 +32,84 @@ CircuitPython is based on `MicroPython <https://micropython.org>`_. See
 development is sponsored by `Adafruit <https://adafruit.com>`_ and is available on their educational
 development boards. Please support both MicroPython and Adafruit.
 
+About This Fork
+---------------
+
+This fork of CircuitPython includes custom modules optimized for **game development** on ESP32-S2
+microcontrollers, specifically targeting the **Lolin S2 Mini** board. It adds two high-performance
+modules that provide hardware-accelerated graphics and audio capabilities:
+
+**PixelCore Module** - High-Performance Display Driver
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``pixelcore`` module provides a hardware-accelerated display driver for ST7789-based displays
+(160x128 resolution). It's optimized for game development with:
+
+- **Hardware-accelerated SPI** transfers using ESP32-S2 DMA
+- **Sprite rendering** with transparency support and automatic bounds checking
+- **Tilemap rendering** with automatic culling for efficient scrolling backgrounds
+- **Drawing primitives**: pixels, lines, rectangles, circles, and filled shapes
+- **Optimized algorithms**: Bresenham's line drawing, vectorized operations, batch processing
+- **Efficient memory management** with DMA-capable buffer allocation
+
+Perfect for 2D games, retro-style graphics, and interactive displays. See the
+`pixelcore README <shared-bindings/pixelcore/README.md>`_ for detailed documentation and examples.
+
+**SampleCore Module** - High-Performance Audio Engine
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``samplecore`` module provides an 8-channel audio engine optimized for game audio:
+
+- **8 independent channels** for simultaneous sound effects and music
+- **44.1kHz sample rate** for professional audio quality
+- **MIDI note control** (0-127) with automatic pitch calculation
+- **Flexible audio data**: supports both wavetables (synthesis) and samples (recorded audio)
+- **Low CPU overhead** with optimized ISR and fixed-point arithmetic
+- **Hardware DAC output** on GPIO17 (ESP32-S2)
+
+Ideal for game sound effects, music playback, and audio synthesis. See the
+`samplecore README <shared-bindings/samplecore/README.md>`_ for detailed documentation and examples.
+
+**Target Hardware**
+~~~~~~~~~~~~~~~~~~~
+
+- **Microcontroller**: ESP32-S2
+- **Recommended Board**: Lolin S2 Mini
+- **Display**: ST7789-based display (160x128) via SPI
+- **Audio**: Built-in DAC on GPIO17 (ESP32-S2)
+
+**Usage Example**
+~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   import pixelcore
+   import samplecore
+   import board
+   import busio
+   import digitalio
+
+   # Initialize display
+   spi = busio.SPI(clock=board.IO36, MOSI=board.IO35)
+   cs = digitalio.DigitalInOut(board.IO5)
+   dc = digitalio.DigitalInOut(board.IO4)
+   rst = digitalio.DigitalInOut(board.IO3)
+   display = pixelcore.PixelCore(spi, cs, dc, rst)
+
+   # Initialize audio
+   audio = samplecore.SampleCore()
+
+   # Your game code here...
+   display.fill(0x0000)  # Clear screen
+   display.sprite(sprite_data, 8, 8, 1, 0, 50, 50)
+   display.update()
+
+   audio.play(channel=0, data=kick_sample, midi_note=60, volume=256)
+
+This fork maintains full compatibility with standard CircuitPython while adding these specialized
+modules for game development. All standard CircuitPython features and libraries continue to work
+as expected.
+
 Get CircuitPython
 ------------------
 
